@@ -1,8 +1,26 @@
 <!DOCTY  <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#181c2b">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="ye  <div class="container">
+    <header>
+      <h1>🎮 Flyin' party</h1>
+      <p>Welcome to our collection of party games!</p>
+    </header>
+    
+    <main>
+      <section class="games-list" aria-label="Available Games">
+        <h2 class="sr-only">Game Collection</h2>
+        <a href="./guess-whomst-d-ve/" class="game-btn" aria-label="Play Guess Who'd've - Tilt-based word guessing game">
+          🎯 Guess Who'd've
+        </a>
+      </section>
+      
+      <p style="font-size: 0.9em; color: #666; margin-top: 2em;">
+        Tilt-based word guessing game for mobile devices
+      </p>
+    </main>
+    
+    <footer class="github-banner">e="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Flyin' Party Games">
   <link rel="apple-touch-icon" href="images/icon-192x192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192x192.png">
@@ -12,7 +30,35 @@
   <link rel="stylesheet" href="assets/fonts/inter/inter.css"><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Flyin' Party Games</title>
+  <title>Flyin' Party Games - Mobile Party Games Collection</title>
+  <meta name="description" content="Play Flyin' Party Games - a collection of fun mobile party games including tilt-based word guessing games. Perfect for parties, gatherings, and group entertainment. Installable as a PWA for offline play.">
+  <meta name="keywords" content="party games, mobile games, word games, tilt games, gyro games, charades, party entertainment, group games, PWA, offline games">
+  <meta name="author" content="Dominik Mückstein">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mudomi.github.io/flyin.party/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mudomi.github.io/flyin.party/">
+  <meta property="og:title" content="Flyin' Party Games - Mobile Party Games Collection">
+  <meta property="og:description" content="Play Flyin' Party Games - a collection of fun mobile party games including tilt-based word guessing games. Perfect for parties, gatherings, and group entertainment.">
+  <meta property="og:image" content="https://mudomi.github.io/flyin.party/assets/icon/icon-512x512.png">
+  <meta property="og:site_name" content="Flyin' Party Games">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://mudomi.github.io/flyin.party/">
+  <meta property="twitter:title" content="Flyin' Party Games - Mobile Party Games Collection">
+  <meta property="twitter:description" content="Play Flyin' Party Games - a collection of fun mobile party games including tilt-based word guessing games. Perfect for parties, gatherings, and group entertainment.">
+  <meta property="twitter:image" content="https://mudomi.github.io/flyin.party/assets/icon/icon-512x512.png">
+  
+  <!-- Additional SEO -->
+  <meta name="application-name" content="Flyin' Party Games">
+  <meta name="msapplication-TileColor" content="#181c2b">
+  <meta name="msapplication-TileImage" content="assets/icon/icon-192x192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   
   <!-- PWA Meta Tags -->
@@ -91,6 +137,22 @@
       margin-top: 2em;
     }
     
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    header, main, footer {
+      width: 100%;
+    }
+    
     .github-banner {
       margin-top: 3em;
       padding: 20px;
@@ -112,6 +174,40 @@
       text-decoration: underline;
     }
   </style>
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Flyin' Party Games",
+    "description": "A collection of fun mobile party games including tilt-based word guessing games. Perfect for parties, gatherings, and group entertainment.",
+    "url": "https://mudomi.github.io/flyin.party/",
+    "applicationCategory": "Game",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Flyin' Party Games"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "ratingCount": "1"
+    },
+    "screenshot": "https://mudomi.github.io/flyin.party/assets/icon/icon-512x512.png",
+    "browserRequirements": "Requires JavaScript. Works best on mobile devices with accelerometer support.",
+    "softwareVersion": "1.0",
+    "datePublished": "2025-01-27",
+    "inLanguage": "en-US",
+    "isAccessibleForFree": true,
+    "keywords": "party games, mobile games, word games, tilt games, gyro games, charades, party entertainment, group games, PWA, offline games"
+  }
+  </script>
 </head>
 <body>
   <div class="container">
@@ -135,7 +231,7 @@
       <p>
         <a href="https://github.com/mudomi/flyin.party" target="_blank" rel="noopener">See the code on GitHub</a>.
       </p>
-    </div>
+    </footer>
   </div>
 
   <script>

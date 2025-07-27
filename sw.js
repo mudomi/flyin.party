@@ -1,4 +1,4 @@
-const CACHE_NAME = 'flyin-party-v1.2';
+const CACHE_NAME = 'flyin-party-v1.3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -6,6 +6,8 @@ const urlsToCache = [
   '/guess-whomst-d-ve/index.html',
   '/guess-whomst-d-ve/words.txt',
   '/manifest.json',
+  '/sitemap.xml',
+  '/robots.txt',
   '/images/icon-192x192.png',
   '/images/icon-512x512.png',
   '/images/icon.png',
