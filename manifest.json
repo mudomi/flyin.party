@@ -1,0 +1,28 @@
+{
+  "name": "Flying Party Games",
+  "short_name": "Flying Party",
+  "description": "Collection of tilt-based party games for mobile devices",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#181c2b",
+  "theme_color": "#181c2b",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "lang": "en",
+  "dir": "ltr"
+}

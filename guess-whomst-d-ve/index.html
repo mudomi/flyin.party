@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess Who'd've - Gyro Word Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#181c2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Guess Who'd've">
+  <link rel="apple-touch-icon" href="../images/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../images/icon-512x512.png">
+  
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #181c2b;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+    }
+    
+    #game-container {
+      text-align: center;
+      width: 100vw;
+      max-width: 600px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    #word {
+      font-size: 4em;
+      margin: 1em 0;
+      min-height: 1.2em;
+      font-weight: bold;
+    }
+    
+    #countdown {
+      font-size: 8em;
+      margin: 0.5em 0;
+      min-height: 1.2em;
+      font-weight: bold;
+      color: #ffb300;
+      text-shadow: 0 0 20px #ffb300;
+    }
+    
+    #timer, #score {
+      font-size: 1.5em;
+      margin: 0.5em 0;
+    }
+    
+    .btn {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px;
+      min-width: 120px;
+    }
+    
+    .btn-primary {
+      background: #31b24a;
+    }
+    
+    .btn-secondary {
+      background: #666;
+    }
+    
+    #status {
+      font-size: 1.2em;
+      color: #ffb300;
+      margin: 1em 0;
+      min-height: 40px;
+    }
+    
+    #controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    #back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      text-decoration: none;
+      color: #fff;
+      background: #666;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+    
+    #back-btn:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <a href="../" id="back-btn">← Back</a>
+  
+  <div id="game-container">
+    <div id="timer">Time: 2:00</div>
+    <div id="score">Score: 0</div>
+    <div id="countdown" style="display:none;"></div>
+    <div id="word"></div>
+    <div id="status">Loading words...</div>
+    <div id="controls">
+      <button id="start-btn" class="btn btn-primary" disabled>Start Game</button>
+    </div>
+    <div id="result" style="display:none;"></div>
+    <button id="restart-btn" class="btn btn-primary" style="display:none;">Restart</button>
+  </div>
+
+  <script>
+    // Config
+    const GAME_TIME = 120;
+    const GAMMA_THRESHOLD = 40;
+    const GAMMA_MAX = 50;
+    const MOVEMENT_COOLDOWN = 1000;
+
+    // State
+    let WORDS = [];
+    let shuffledWords = [];
+    let currentWordIndex = 0;
+    let score = 0;
+    let timer = GAME_TIME;
+    let timerInterval = null;
+    let gameActive = false;
+    let readyForNext = true;
+    let lastMovementTime = 0;
+    let wordsLoaded = false;
+
+    // DOM
+    const wordDiv = document.getElementById('word');
+    const timerDiv = document.getElementById('timer');
+    const scoreDiv = document.getElementById('score');
+    const countdownDiv = document.getElementById('countdown');
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const resultDiv = document.getElementById('result');
+    const statusDiv = document.getElementById('status');
+    const controlsDiv = document.getElementById('controls');
+
+    // Load words from file
+    async function loadWords() {
+      try {
+        updateStatus('Loading words...');
+        const response = await fetch('./words.txt');
+        
+        if (!response.ok) {
+          throw new Error(`Failed to load words.txt: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        WORDS = text.split('\n').map(word => word.trim()).filter(word => word.length > 0);
+        
+        if (WORDS.length === 0) {
+          throw new Error('No words found in words.txt');
+        }
+        
+        wordsLoaded = true;
+        updateStatus('Ready to play!');
+        startBtn.disabled = false;
+        
+      } catch (error) {
+        console.error('Error loading words:', error);
+        updateStatus('Failed to load words, using defaults...');
+        
+        // Fallback words
+        WORDS = [
+          "Apple", "Banana", "Giraffe", "Elephant", "Rocket", "Pizza", "Tiger", 
+          "Guitar", "Sunflower", "Computer", "Pyramid", "Rainbow", "Helicopter",
+          "Penguin", "Moon", "Volcano", "Wizard", "Camera", "Shark", "Cloud"
+        ];
+        
+        wordsLoaded = true;
+        setTimeout(() => {
+          updateStatus('Ready to play!');
+          startBtn.disabled = false;
+        }, 2000);
+      }
+    }
+
+    // Helper functions
+    function shuffleArray(arr) {
+      let a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function nextWord() {
+      if (currentWordIndex >= shuffledWords.length) {
+        shuffledWords = shuffleArray(WORDS);
+        currentWordIndex = 0;
+      }
+      wordDiv.textContent = shuffledWords[currentWordIndex];
+      currentWordIndex++;
+      readyForNext = false;
+      setTimeout(() => { readyForNext = true; }, 600);
+    }
+
+    function updateScoreDisplay() {
+      scoreDiv.textContent = `Score: ${score}`;
+    }
+
+    function updateTimerDisplay() {
+      const min = Math.floor(timer / 60);
+      const sec = timer % 60;
+      timerDiv.textContent = `Time: ${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function updateStatus(message) {
+      statusDiv.textContent = message;
+    }
+
+    // Countdown
+    function showCountdown(message, duration = 3) {
+      return new Promise((resolve) => {
+        wordDiv.style.display = 'none';
+        statusDiv.style.display = 'none';
+        controlsDiv.style.display = 'none';
+        countdownDiv.style.display = 'block';
+        
+        updateStatus(message);
+        statusDiv.style.display = 'block';
+        
+        let count = duration;
+        
+        const updateCountdown = () => {
+          if (count > 0) {
+            countdownDiv.textContent = count;
+            count--;
+            setTimeout(updateCountdown, 1000);
+          } else {
+            countdownDiv.textContent = 'GO!';
+            setTimeout(() => {
+              countdownDiv.style.display = 'none';
+              wordDiv.style.display = 'block';
+              resolve();
+            }, 500);
+          }
+        };
+        
+        updateCountdown();
+      });
+    }
+
+    // Tilt detection
+    function handleOrientation(event) {
+      const gamma = event.gamma;
+      if (gamma === null || gamma === undefined) return;
+      
+      const currentTime = Date.now();
+      const absGamma = Math.abs(gamma);
+      
+      // Only process if game is active and ready
+      if (!gameActive || !readyForNext) return;
+      
+      // Prevent too rapid movements
+      if (currentTime - lastMovementTime < MOVEMENT_COOLDOWN) return;
+
+      // Only trigger if absolute value is within 50 degrees
+      if (absGamma <= GAMMA_MAX) {
+        if (gamma > GAMMA_THRESHOLD) {
+          // Forward tilt = Correct
+          score++;
+          updateScoreDisplay();
+          nextWord();
+          updateStatus('Correct! +1');
+          lastMovementTime = currentTime;
+        } else if (gamma < -GAMMA_THRESHOLD) {
+          // Backward tilt = Skip
+          nextWord();
+          updateStatus('Skipped');
+          lastMovementTime = currentTime;
+        }
+      }
+    }
+
+    // Game logic
+    async function startGame() {
+      if (!wordsLoaded) {
+        updateStatus('Words not loaded yet. Please wait...');
+        return;
+      }
+
+      // Request permission for iOS
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          const permission = await DeviceOrientationEvent.requestPermission();
+          if (permission !== 'granted') {
+            updateStatus('Permission denied');
+            return;
+          }
+        } catch (error) {
+          updateStatus('Permission failed');
+          return;
+        }
+      }
+
+      // Initialize game
+      score = 0;
+      timer = GAME_TIME;
+      currentWordIndex = 0;
+      shuffledWords = shuffleArray(WORDS);
+      updateScoreDisplay();
+      updateTimerDisplay();
+      resultDiv.style.display = 'none';
+      restartBtn.style.display = 'none';
+      lastMovementTime = 0;
+
+      // Show countdown
+      await showCountdown('Get ready!', 3);
+
+      // Start orientation listener
+      window.addEventListener('deviceorientation', handleOrientation);
+      
+      // Start game
+      gameActive = true;
+      nextWord();
+      updateStatus('Tilt to play!');
+      statusDiv.style.display = 'block';
+
+      // Start timer
+      timerInterval = setInterval(() => {
+        if (!gameActive) return;
+        timer--;
+        updateTimerDisplay();
+        if (timer <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      gameActive = false;
+      wordDiv.textContent = '';
+      resultDiv.textContent = `Final Score: ${score}`;
+      resultDiv.style.display = 'block';
+      restartBtn.style.display = 'block';
+      clearInterval(timerInterval);
+      window.removeEventListener('deviceorientation', handleOrientation);
+      updateStatus('Game Over!');
+      statusDiv.style.display = 'block';
+      controlsDiv.style.display = 'flex';
+    }
+
+    function resetGame() {
+      score = 0;
+      timer = GAME_TIME;
+      currentWordIndex = 0;
+      shuffledWords = shuffleArray(WORDS);
+      updateScoreDisplay();
+      updateTimerDisplay();
+      resultDiv.style.display = 'none';
+      restartBtn.style.display = 'none';
+      wordDiv.textContent = '';
+      wordDiv.style.display = 'block';
+      controlsDiv.style.display = 'flex';
+      statusDiv.style.display = 'block';
+      countdownDiv.style.display = 'none';
+      lastMovementTime = 0;
+      updateStatus(wordsLoaded ? 'Ready to play!' : 'Loading words...');
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startGame);
+    restartBtn.addEventListener('click', resetGame);
+
+    // Initialize
+    window.addEventListener('load', loadWords);
+    resetGame();
+
+    // PWA Service Worker registration
+    // Note: Service worker is registered from the root domain for proper scope
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('../sw.js').catch(console.error);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flying Party Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#181c2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flying Party Games">
+  <link rel="apple-touch-icon" href="images/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/icon-512x512.png">
+  
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #181c2b;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      text-align: center;
+      width: 100vw;
+      max-width: 600px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    h1 {
+      font-size: 3em;
+      margin: 0.5em 0;
+      font-weight: bold;
+      color: #ffb300;
+      text-shadow: 0 0 20px #ffb300;
+    }
+    
+    p {
+      font-size: 1.2em;
+      margin: 1em 0;
+      color: #ccc;
+    }
+    
+    .game-btn {
+      display: inline-block;
+      padding: 20px 40px;
+      font-size: 24px;
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      background: #31b24a;
+      text-decoration: none;
+      margin: 20px;
+      min-width: 200px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(49, 178, 74, 0.3);
+    }
+    
+    .game-btn:hover {
+      background: #279a3e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(49, 178, 74, 0.4);
+    }
+    
+    .game-btn:active {
+      transform: translateY(0);
+    }
+    
+    .games-list {
+      margin-top: 2em;
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Flying Party</h1>
+    <p>Welcome to our collection of party games!</p>
+    
+    <div class="games-list">
+      <a href="./guess-whomst-d-ve/" class="game-btn">
+        🎯 Guess Who'd've
+      </a>
+    </div>
+    
+    <p style="font-size: 0.9em; color: #666; margin-top: 2em;">
+      Tilt-based word guessing game for mobile devices
+    </p>
+  </div>
+
+  <script>
+    // PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(console.error);
+    }
+  </script>
+</body>
+</html>

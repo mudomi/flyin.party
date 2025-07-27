@@ -1,0 +1,89 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm init -y
+        npm install --save-dev html-minifier-terser clean-css-cli terser
+
+    - name: Create build directory
+      run: mkdir -p dist
+
+    - name: Copy and minify files
+      run: |
+        # Copy all files to dist directory first
+        cp -r * dist/ 2>/dev/null || true
+        
+        # Remove any git directories from dist
+        rm -rf dist/.git* dist/node_modules dist/package*.json 2>/dev/null || true
+        
+        # Minify HTML files (includes inline CSS and JS)
+        find dist -name "*.html" -type f -exec npx html-minifier-terser \
+          --collapse-whitespace \
+          --remove-comments \
+          --remove-optional-tags \
+          --remove-redundant-attributes \
+          --remove-script-type-attributes \
+          --remove-tag-whitespace \
+          --use-short-doctype \
+          --minify-css true \
+          --minify-js true \
+          --output {} {} \;
+        
+        # If there are standalone CSS files, minify them
+        find dist -name "*.css" -type f -exec npx cleancss -o {} {} \;
+        
+        # If there are standalone JS files, minify them
+        find dist -name "*.js" -type f -exec npx terser {} --output {} --compress --mangle \;
+        
+        echo "Minification complete!"
+        echo "Original size:"
+        du -sh . --exclude=dist --exclude=node_modules --exclude=.git 2>/dev/null || du -sh .
+        echo "Minified size:"
+        du -sh dist/
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './dist'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
