@@ -6,9 +6,9 @@ const urlsToCache = [
   '/guess-whomst-d-ve/index.html',
   '/guess-whomst-d-ve/words.txt',
   '/manifest.json',
-  '/images/icon-192x192.png',
-  '/images/icon-512x512.png',
-  '/images/icon.png',
+  '/assets/icon/icon-192x192.png',
+  '/assets/icon/icon-512x512.png',
+  '/assets/icon/icon.png',
   '/sw.js',
   '/offline.html'
 ];

@@ -11,9 +11,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Flying Party Games">
-  <link rel="apple-touch-icon" href="images/icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="images/icon-512x512.png">
+  <link rel="apple-touch-icon" href="assets/icon/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icon/icon-512x512.png">
   
   <style>
     html, body {
@@ -43,7 +43,6 @@
       margin: 0.5em 0;
       font-weight: bold;
       color: #ffb300;
-      text-shadow: 0 0 20px #ffb300;
     }
     
     p {
@@ -79,20 +78,6 @@
     
     .games-list {
       margin-top: 2em;
-    }
-    
-    .pwa-status {
-      font-size: 0.8em;
-      color: #666;
-      margin-top: 1em;
-      padding: 10px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .pwa-status.ready {
-      color: #31b24a;
-      background: rgba(49, 178, 74, 0.2);
     }
     
     .github-banner {
@@ -132,10 +117,6 @@
       Tilt-based word guessing game for mobile devices
     </p>
     
-    <div id="pwa-status" class="pwa-status">
-      📱 Preparing offline support...
-    </div>
-    
     <div class="github-banner">
       <p>
         This page uses <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Pages</a>.
@@ -149,7 +130,6 @@
   <script>
     // PWA Service Worker and Install Support
     let deferredPrompt;
-    const pwaStatus = document.getElementById('pwa-status');
     
     // Register service worker
     if ('serviceWorker' in navigator) {
@@ -157,22 +137,16 @@
         navigator.serviceWorker.register('sw.js')
           .then(registration => {
             console.log('Service Worker registered successfully:', registration.scope);
-            pwaStatus.textContent = '✅ Ready for offline use!';
-            pwaStatus.classList.add('ready');
             
             // Check for updates
             registration.addEventListener('updatefound', () => {
               console.log('New version available');
-              pwaStatus.textContent = '🔄 Update available - refresh to get latest version';
             });
           })
           .catch(error => {
             console.log('Service Worker registration failed:', error);
-            pwaStatus.textContent = '⚠️ Offline support unavailable';
           });
       });
-    } else {
-      pwaStatus.textContent = '⚠️ PWA not supported in this browser';
     }
 
     // PWA Install prompt
@@ -201,7 +175,6 @@
     // Handle successful PWA installation
     window.addEventListener('appinstalled', () => {
       console.log('PWA was installed');
-      pwaStatus.textContent = '🎉 App installed successfully!';
       deferredPrompt = null;
     });
 
@@ -209,20 +182,7 @@
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
       console.log('Running as PWA');
       document.body.classList.add('pwa-mode');
-      pwaStatus.textContent = '📱 Running as installed app';
-      pwaStatus.classList.add('ready');
     }
-
-    // Network status
-    function updateNetworkStatus() {
-      if (!navigator.onLine) {
-        pwaStatus.textContent = '📴 Offline mode - cached content available';
-        pwaStatus.classList.add('ready');
-      }
-    }
-    
-    window.addEventListener('online', updateNetworkStatus);
-    window.addEventListener('offline', updateNetworkStatus);
   </script>
 </body>
 </html>
