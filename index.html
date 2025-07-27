@@ -45,20 +45,34 @@
   
   <!-- Inter Font -->
   <link rel="stylesheet" href="assets/fonts/inter/inter.css">
+  <link rel="preload" href="assets/fonts/inter/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin>
   
   <style>
+    /* Font loading optimization for iOS Lockdown mode */
+    @supports (font-variation-settings: normal) {
+      :root {
+        font-family: 'InterVariable', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+      }
+    }
+    
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
       background: #181c2b;
       color: #fff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      /* Ensure text is readable even if fonts fail to load */
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     
     .container {
@@ -74,7 +88,7 @@
       margin: 0.5em 0;
       font-weight: 900;
       color: #ffffff;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
     }
     
     p {
@@ -217,6 +231,32 @@
   <script>
     // PWA Service Worker and Install Support
     let deferredPrompt;
+    
+    // Font loading detection for iOS Lockdown mode compatibility
+    function detectFontSupport() {
+      // Check if Inter font is loaded
+      if (document.fonts && document.fonts.check) {
+        const interLoaded = document.fonts.check('1em Inter');
+        if (!interLoaded) {
+          console.log('Inter font not available, using system fonts');
+          document.body.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif';
+        }
+      }
+    }
+    
+    // Load fonts with timeout for iOS Lockdown mode
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        detectFontSupport();
+      }).catch(() => {
+        // Fallback if font loading fails
+        console.log('Font loading failed, using system fonts');
+        document.body.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif';
+      });
+      
+      // Timeout fallback for slow/blocked font loading
+      setTimeout(detectFontSupport, 3000);
+    }
     
     // Register service worker
     if ('serviceWorker' in navigator) {
