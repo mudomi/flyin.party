@@ -79,6 +79,42 @@
     
     .games-list {
       margin-top: 2em;
+    }
+    
+    .pwa-status {
+      font-size: 0.8em;
+      color: #666;
+      margin-top: 1em;
+      padding: 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .pwa-status.ready {
+      color: #31b24a;
+      background: rgba(49, 178, 74, 0.2);
+    }
+    
+    .github-banner {
+      margin-top: 3em;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.85em;
+      color: #999;
+    }
+    
+    .github-banner p {
+      margin: 0.5em 0;
+    }
+    
+    .github-banner a {
+      color: #ffb300;
+      text-decoration: none;
+    }
+    
+    .github-banner a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -95,13 +131,98 @@
     <p style="font-size: 0.9em; color: #666; margin-top: 2em;">
       Tilt-based word guessing game for mobile devices
     </p>
+    
+    <div id="pwa-status" class="pwa-status">
+      📱 Preparing offline support...
+    </div>
+    
+    <div class="github-banner">
+      <p>
+        This page uses <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Pages</a>.
+      </p>
+      <p>
+        <a href="https://github.com/mudomi/flyin.party" target="_blank" rel="noopener">See the code on GitHub</a>.
+      </p>
+    </div>
   </div>
 
   <script>
-    // PWA Service Worker
+    // PWA Service Worker and Install Support
+    let deferredPrompt;
+    const pwaStatus = document.getElementById('pwa-status');
+    
+    // Register service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(console.error);
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('Service Worker registered successfully:', registration.scope);
+            pwaStatus.textContent = '✅ Ready for offline use!';
+            pwaStatus.classList.add('ready');
+            
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              console.log('New version available');
+              pwaStatus.textContent = '🔄 Update available - refresh to get latest version';
+            });
+          })
+          .catch(error => {
+            console.log('Service Worker registration failed:', error);
+            pwaStatus.textContent = '⚠️ Offline support unavailable';
+          });
+      });
+    } else {
+      pwaStatus.textContent = '⚠️ PWA not supported in this browser';
     }
+
+    // PWA Install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('PWA install prompt available');
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Show custom install button or message
+      const installHint = document.createElement('p');
+      installHint.innerHTML = '💡 Tip: You can install this app on your device! <span style="text-decoration: underline;">Tap here</span>';
+      installHint.style.cssText = 'font-size: 0.9em; color: #ffb300; margin-top: 1em; cursor: pointer;';
+      installHint.onclick = () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            console.log('User choice:', choiceResult.outcome);
+            deferredPrompt = null;
+            installHint.remove();
+          });
+        }
+      };
+      document.querySelector('.container').appendChild(installHint);
+    });
+
+    // Handle successful PWA installation
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA was installed');
+      pwaStatus.textContent = '🎉 App installed successfully!';
+      deferredPrompt = null;
+    });
+
+    // Check if running as PWA
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+      console.log('Running as PWA');
+      document.body.classList.add('pwa-mode');
+      pwaStatus.textContent = '📱 Running as installed app';
+      pwaStatus.classList.add('ready');
+    }
+
+    // Network status
+    function updateNetworkStatus() {
+      if (!navigator.onLine) {
+        pwaStatus.textContent = '📴 Offline mode - cached content available';
+        pwaStatus.classList.add('ready');
+      }
+    }
+    
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
   </script>
 </body>
 </html>

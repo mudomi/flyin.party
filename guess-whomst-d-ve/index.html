@@ -393,8 +393,35 @@
     // PWA Service Worker registration
     // Note: Service worker is registered from the root domain for proper scope
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('../sw.js').catch(console.error);
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js')
+          .then(registration => {
+            console.log('Service Worker registered successfully:', registration.scope);
+          })
+          .catch(error => {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
     }
+
+    // Check if offline and show message
+    function checkOnlineStatus() {
+      if (!navigator.onLine) {
+        updateStatus('Offline mode - using cached game');
+      }
+    }
+    
+    window.addEventListener('online', () => {
+      console.log('Back online');
+    });
+    
+    window.addEventListener('offline', () => {
+      console.log('Gone offline');
+      checkOnlineStatus();
+    });
+    
+    // Initial check
+    checkOnlineStatus();
   </script>
 </body>
 </html>
