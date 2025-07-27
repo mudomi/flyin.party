@@ -1,4 +1,4 @@
-const CACHE_NAME = 'flying-party-v1.1';
+const CACHE_NAME = 'flyin-party-v1.2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -6,11 +6,18 @@ const urlsToCache = [
   '/guess-whomst-d-ve/index.html',
   '/guess-whomst-d-ve/words.txt',
   '/manifest.json',
-  '/assets/icon/icon-192x192.png',
-  '/assets/icon/icon-512x512.png',
-  '/assets/icon/icon.png',
+  '/images/icon-192x192.png',
+  '/images/icon-512x512.png',
+  '/images/icon.png',
   '/sw.js',
-  '/offline.html'
+  '/offline.html',
+  '/assets/fonts/inter/inter.css',
+  '/assets/fonts/inter/Inter-Regular.woff2',
+  '/assets/fonts/inter/Inter-Medium.woff2',
+  '/assets/fonts/inter/Inter-SemiBold.woff2',
+  '/assets/fonts/inter/Inter-Bold.woff2',
+  '/assets/fonts/inter/Inter-ExtraBold.woff2',
+  '/assets/fonts/inter/Inter-Black.woff2'
 ];
 
 // Install event - cache files

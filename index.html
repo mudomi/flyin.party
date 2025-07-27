@@ -1,8 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTY  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#181c2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flyin' Party Games">
+  <link rel="apple-touch-icon" href="images/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/icon-512x512.png">
+  
+  <!-- Inter Font -->
+  <link rel="stylesheet" href="assets/fonts/inter/inter.css"><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Flying Party Games</title>
+  <title>Flyin' Party Games</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   
   <!-- PWA Meta Tags -->
@@ -10,7 +20,7 @@
   <meta name="theme-color" content="#181c2b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Flying Party Games">
+  <meta name="apple-mobile-web-app-title" content="Flyin' Party Games">
   <link rel="apple-touch-icon" href="assets/icon/icon-192x192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon/icon-192x192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icon/icon-512x512.png">
@@ -21,7 +31,7 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #181c2b;
       color: #fff;
       display: flex;
@@ -33,16 +43,17 @@
     .container {
       text-align: center;
       width: 100vw;
-      max-width: 600px;
+      max-width: 700px;
       padding: 20px;
       box-sizing: border-box;
     }
     
     h1 {
-      font-size: 3em;
+      font-size: 7em;
       margin: 0.5em 0;
-      font-weight: bold;
-      color: #ffb300;
+      font-weight: 900;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
     }
     
     p {
@@ -104,7 +115,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>🎮 Flying Party</h1>
+    <h1>Flyin' party</h1>
     <p>Welcome to our collection of party games!</p>
     
     <div class="games-list">

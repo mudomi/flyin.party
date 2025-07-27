@@ -1,6 +1,6 @@
 {
-  "name": "Flying Party Games",
-  "short_name": "Flying Party",
+  "name": "Flyin' Party Games",
+  "short_name": "Flyin' Party",
   "description": "Collection of tilt-based party games for mobile devices",
   "start_url": "/",
   "display": "standalone",
