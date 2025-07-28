@@ -104,7 +104,7 @@
     }
     
     h1 {
-      font-size: 2.5em;
+      font-size: 10em;
       margin: 0;
       font-weight: 900;
       color: #ffffff;
@@ -517,7 +517,7 @@
       // Approximate text dimensions based on font and content
       // Font size 2.5em ≈ 40px at 16px base, font-weight: 900 (bold)
       // Text content: "Flyin'\nparty" (with line break)
-      const baseFontSize = 18; // 2.5em in pixels
+      const baseFontSize = 72; // 2.5em in pixels
       const textContent = h1.textContent || h1.innerText;
       const lines = textContent.split(/\r?\n|\r/); // Split by line breaks
       const longestLine = lines.reduce((a, b) => a.length > b.length ? a : b, '');
