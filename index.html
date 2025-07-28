@@ -88,7 +88,7 @@
     }
     
     h1 {
-      font-size: clamp(3em, 8vw, 7em);
+      font-size: 2.5em;
       margin: 0;
       font-weight: 900;
       color: #ffffff;
@@ -99,6 +99,8 @@
       align-items: center;
       justify-content: center;
       width: 100%;
+      transform-origin: center;
+      transition: transform 0.3s ease;
     }
     
     p {
@@ -268,20 +270,80 @@
       }
     }
     
+    // Function to stretch text to fit container exactly
+    function stretchTextToFit() {
+      const h1 = document.querySelector('h1');
+      const container = document.querySelector('.container');
+      const p = document.querySelector('.container p');
+      
+      if (!h1 || !container) return;
+      
+      // Reset any existing transform to measure natural size
+      h1.style.transform = 'none';
+      
+      // Force a reflow to ensure accurate measurements
+      h1.offsetWidth;
+      
+      // Get container dimensions
+      const containerRect = container.getBoundingClientRect();
+      const containerPadding = 40; // 20px padding on each side
+      
+      // Get available space (account for paragraph element)
+      const pHeight = p ? p.getBoundingClientRect().height : 0;
+      const availableWidth = containerRect.width - containerPadding;
+      const availableHeight = containerRect.height - containerPadding - pHeight;
+      
+      // Get text natural dimensions
+      const textRect = h1.getBoundingClientRect();
+      const textWidth = textRect.width;
+      const textHeight = textRect.height;
+      
+      // Calculate scale factors to fill the available space completely
+      const scaleX = availableWidth / textWidth;
+      const scaleY = availableHeight / textHeight;
+      
+      // Apply the transform to stretch the text dramatically
+      h1.style.transform = `scale(${scaleX}, ${scaleY})`;
+      
+      console.log(`Text stretched: scaleX=${scaleX.toFixed(2)}, scaleY=${scaleY.toFixed(2)}`);
+      console.log(`Container: ${availableWidth}x${availableHeight}, Text: ${textWidth.toFixed(1)}x${textHeight.toFixed(1)}`);
+    }
+    
     // Load fonts with timeout for iOS Lockdown mode
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
         detectFontSupport();
+        // Stretch text after fonts are loaded
+        setTimeout(stretchTextToFit, 100);
       }).catch(() => {
         // Fallback if font loading fails
         console.log('Font loading failed, using system fonts');
         document.body.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif';
+        setTimeout(stretchTextToFit, 100);
       });
       
       // Timeout fallback for slow/blocked font loading
-      setTimeout(detectFontSupport, 3000);
+      setTimeout(() => {
+        detectFontSupport();
+        stretchTextToFit();
+      }, 3000);
+    } else {
+      // Fallback for browsers without font loading API
+      setTimeout(stretchTextToFit, 1000);
     }
+
+    // Also ensure the function runs on DOM content loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(stretchTextToFit, 500);
+    });
     
+    // Handle window resize to re-stretch text
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(stretchTextToFit, 150);
+    });
+
     // Register service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
