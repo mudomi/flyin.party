@@ -132,7 +132,6 @@
     
     .game-card {
       display: block;
-      width: 100%;
       max-width: 600px;
       margin: 16px auto;
       padding: 24px;
@@ -517,7 +516,7 @@
       // Approximate text dimensions based on font and content
       // Font size 2.5em ≈ 40px at 16px base, font-weight: 900 (bold)
       // Text content: "Flyin'\nparty" (with line break)
-      const baseFontSize = 20; // 2.5em in pixels
+      const baseFontSize = 18; // 2.5em in pixels
       const textContent = h1.textContent || h1.innerText;
       const lines = textContent.split(/\r?\n|\r/); // Split by line breaks
       const longestLine = lines.reduce((a, b) => a.length > b.length ? a : b, '');
@@ -529,9 +528,20 @@
       const estimatedTextHeight = lines.length * baseFontSize * 2; // line-height factor
       
       // Calculate scale factors to fill the available space completely
-      const scaleX = availableWidth / estimatedTextWidth;
-      const scaleY = availableHeight / estimatedTextHeight;
-      
+      let scaleX = availableWidth / estimatedTextWidth;
+      let scaleY = availableHeight / estimatedTextHeight;
+
+      // calculate ratio
+      const ratio = scaleX/scaleY;
+      console.log(`Stretching text with ratio: ${ratio.toFixed(2)}`);
+
+      if(ratio < 0.8){
+        scaleY = scaleX / 0.8;
+      }
+      if(ratio > 1.5){
+        scaleX = scaleY * 1.5;
+      }
+
       // Apply the transform to stretch the text dramatically
       h1.style.transform = `scale(${scaleX}, ${scaleY})`;
       
