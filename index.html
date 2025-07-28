@@ -61,13 +61,13 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      overflow-x: hidden;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
       background: #181c2b;
       color: #fff;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       /* Ensure text is readable even if fonts fail to load */
       text-rendering: optimizeLegibility;
@@ -79,21 +79,31 @@
       text-align: center;
       width: 100vw;
       max-width: 700px;
+      height: 30vh;
       padding: 20px;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
     
     h1 {
-      font-size: 7em;
-      margin: 0.5em 0;
+      font-size: clamp(3em, 8vw, 7em);
+      margin: 0;
       font-weight: 900;
       color: #ffffff;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
     
     p {
-      font-size: 1.2em;
-      margin: 1em 0;
+      font-size: clamp(0.9em, 2vw, 1.2em);
+      margin: 0;
       color: #ccc;
     }
     
@@ -124,6 +134,18 @@
     
     .games-list {
       margin-top: 2em;
+    }
+    
+    .content-below {
+      width: 100vw;
+      max-width: 700px;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     
     .sr-only {
@@ -204,7 +226,9 @@
       <h1>Flyin' party</h1>
       <p>Welcome to our collection of party games!</p>
     </header>
-    
+  </div>
+  
+  <div class="content-below">
     <main>
       <section class="games-list" aria-label="Available Games">
         <h2 class="sr-only">Game Collection</h2>
