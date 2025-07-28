@@ -73,6 +73,16 @@
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      /* Hide scrollbars while keeping scroll functionality */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
+      scrollbar-width: none; /* Firefox */
+    }
+    
+    /* Hide scrollbars for WebKit browsers (Chrome, Safari, newer Edge) */
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar,
+    *::-webkit-scrollbar {
+      display: none;
     }
     
     .container {
@@ -85,6 +95,12 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      pointer-events: none;
     }
     
     h1 {
@@ -100,7 +116,12 @@
       justify-content: center;
       width: 100%;
       transform-origin: center;
-      transition: transform 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.1, 0.45, 0.32, 1.59);
+      opacity: 0.9;
+    }
+    
+    .container p {
+      opacity: 0.8;
     }
     
     p {
@@ -109,7 +130,157 @@
       color: #ccc;
     }
     
-    .game-btn {
+    .game-card {
+      display: block;
+      width: 100%;
+      max-width: 600px;
+      margin: 16px auto;
+      padding: 24px;
+      border-radius: 24px;
+      background: #1f2937;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      box-shadow: 
+        0px 1px 2px rgba(0, 0, 0, 0.3),
+        0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .game-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0px 2px 4px rgba(0, 0, 0, 0.3),
+        0px 4px 12px 3px rgba(0, 0, 0, 0.15);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    
+    .game-card:hover::before {
+      opacity: 1;
+    }
+    
+    .game-card:active {
+      transform: translateY(-1px);
+      transition: all 0.1s ease;
+    }
+    
+    .game-card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .game-icon {
+      font-size: 32px;
+      margin-right: 16px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .game-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      color: #ffffff;
+    }
+    
+    .game-description {
+      font-size: 14px;
+      color: #94a3b8;
+      margin: 8px 0 0 0;
+      line-height: 1.4;
+    }
+    
+    .game-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 12px;
+    }
+    
+    .status-available {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+    
+    .status-coming-soon {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+    
+    .info-card {
+      display: block;
+      max-width: 600px;
+      margin: 16px auto;
+      padding: 24px;
+      border-radius: 24px;
+      background: #1e293b;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      box-shadow: 
+        0px 1px 2px rgba(0, 0, 0, 0.3),
+        0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+    
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+      opacity: 1;
+      pointer-events: none;
+    }
+    
+    .info-card .welcome-text {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 12px 0;
+      color: #f1f5f9;
+      text-align: center;
+    }
+    
+    .info-card .install-hint {
+      font-size: 14px;
+      color: #fbbf24;
+      margin: 0;
+      text-align: center;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .info-card .install-hint:hover {
+      color: #f59e0b;
+    }
+    
+    .old-game-btn {
       display: inline-block;
       padding: 20px 40px;
       font-size: 24px;
@@ -124,13 +295,13 @@
       box-shadow: 0 4px 15px rgba(49, 178, 74, 0.3);
     }
     
-    .game-btn:hover {
+    .old-game-btn:hover {
       background: #279a3e;
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(49, 178, 74, 0.4);
     }
     
-    .game-btn:active {
+    .old-game-btn:active {
       transform: translateY(0);
     }
     
@@ -144,10 +315,13 @@
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
-      flex-grow: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+      margin-top: 35vh;
+      position: relative;
+      z-index: 2;
+      min-height: calc(100vh - 30vh);
     }
     
     .sr-only {
@@ -225,23 +399,67 @@
 <body>
   <div class="container">
     <header>
-      <h1>Flyin' party</h1>
-      <p>Welcome to our collection of party games!</p>
+      <h1 style="height: 35vh;margin-bottom: 30px">Flyin'<br>party</h1>
     </header>
   </div>
   
   <div class="content-below">
+    <div class="info-card">
+      <p class="welcome-text">Welcome to our collection of party games!</p>
+      <div id="install-container"></div>
+    </div>
+    
     <main>
       <section class="games-list" aria-label="Available Games">
         <h2 class="sr-only">Game Collection</h2>
-        <a href="./guess-whomst-d-ve/" class="game-btn" aria-label="Play Guess Who'd've - Tilt-based word guessing game">
-          🎯 Guess Who'd've
+        
+        <!-- Available Game -->
+        <a href="./guess-whomst-d-ve/" class="game-card" aria-label="Play Guess Who'd've - Tilt-based word guessing game">
+          <div class="game-card-header">
+            <div class="game-icon">🎯</div>
+            <h3 class="game-title">Guess Who'd've</h3>
+          </div>
+          <p class="game-description">Tilt-based word guessing game for mobile devices. Perfect for parties!</p>
+          <span class="game-status status-available">Available Now</span>
         </a>
+        
+        <!-- Coming Soon Games -->
+        <div class="game-card" style="cursor: not-allowed; opacity: 0.9;">
+          <div class="game-card-header">
+            <div class="game-icon">🎲</div>
+            <h3 class="game-title">Truth or Dare Roulette</h3>
+          </div>
+          <p class="game-description">Spin the wheel of truth and dares with customizable categories and difficulty levels.</p>
+          <span class="game-status status-coming-soon">Coming Soon</span>
+        </div>
+        
+        <div class="game-card" style="cursor: not-allowed; opacity: 0.9;">
+          <div class="game-card-header">
+            <div class="game-icon">🎭</div>
+            <h3 class="game-title">Charades Challenge</h3>
+          </div>
+          <p class="game-description">Act out movies, books, and phrases while your team guesses. Timer included!</p>
+          <span class="game-status status-coming-soon">Coming Soon</span>
+        </div>
+        
+        <div class="game-card" style="cursor: not-allowed; opacity: 0.9;">
+          <div class="game-card-header">
+            <div class="game-icon">🎵</div>
+            <h3 class="game-title">Rhythm Sync</h3>
+          </div>
+          <p class="game-description">Tap to the beat and sync with friends in this multiplayer rhythm challenge.</p>
+          <span class="game-status status-coming-soon">Coming Soon</span>
+        </div>
+        
+        <div class="game-card" style="cursor: not-allowed; opacity: 0.9;">
+          <div class="game-card-header">
+            <div class="game-icon">🧩</div>
+            <h3 class="game-title">Memory Mayhem</h3>
+          </div>
+          <p class="game-description">Test your memory with sequences, patterns, and quick recall challenges.</p>
+          <span class="game-status status-coming-soon">Coming Soon</span>
+        </div>
       </section>
-      
-      <p style="font-size: 0.9em; color: #666; margin-top: 2em;">
-        Tilt-based word guessing game for mobile devices
-      </p>
     </main>
     
     <footer class="github-banner">
@@ -270,71 +488,99 @@
       }
     }
     
-    // Function to stretch text to fit container exactly
+    // Function to stretch text to fit container statically
+    let isScaling = false;
     function stretchTextToFit() {
+      if (isScaling) return; // Prevent multiple simultaneous calls
+      isScaling = true;
+      
       const h1 = document.querySelector('h1');
-      const container = document.querySelector('.container');
-      const p = document.querySelector('.container p');
       
-      if (!h1 || !container) return;
+      if (!h1) {
+        isScaling = false;
+        return;
+      }
       
-      // Reset any existing transform to measure natural size
+      // Reset transform but keep original font size
       h1.style.transform = 'none';
       
-      // Force a reflow to ensure accurate measurements
-      h1.offsetWidth;
-      
-      // Get container dimensions
-      const containerRect = container.getBoundingClientRect();
+      // Static calculations based on viewport dimensions
+      const targetHeight = window.innerHeight * 0.3; // 30vh
+      const targetWidth = Math.min(window.innerWidth, 700); // 100vw with 700px max
       const containerPadding = 40; // 20px padding on each side
       
-      // Get available space (account for paragraph element)
-      const pHeight = p ? p.getBoundingClientRect().height : 0;
-      const availableWidth = containerRect.width - containerPadding;
-      const availableHeight = containerRect.height - containerPadding - pHeight;
+      // Calculate available space accounting for paragraph
+      const pHeight = 50; // Paragraph height estimate
+      const availableWidth = targetWidth - containerPadding;
+      const availableHeight = targetHeight - containerPadding - pHeight;
       
-      // Get text natural dimensions
-      const textRect = h1.getBoundingClientRect();
-      const textWidth = textRect.width;
-      const textHeight = textRect.height;
+      // Approximate text dimensions based on font and content
+      // Font size 2.5em ≈ 40px at 16px base, font-weight: 900 (bold)
+      // Text content: "Flyin'\nparty" (with line break)
+      const baseFontSize = 20; // 2.5em in pixels
+      const textContent = h1.textContent || h1.innerText;
+      const lines = textContent.split(/\r?\n|\r/); // Split by line breaks
+      const longestLine = lines.reduce((a, b) => a.length > b.length ? a : b, '');
+      
+      // Rough character width for Inter font weight 900 at base size
+      // Bold/black fonts are wider, approximate 0.6 ratio for Inter Black
+      const charWidthRatio = 0.6;
+      const estimatedTextWidth = longestLine.length * baseFontSize * charWidthRatio;
+      const estimatedTextHeight = lines.length * baseFontSize * 2; // line-height factor
       
       // Calculate scale factors to fill the available space completely
-      const scaleX = availableWidth / textWidth;
-      const scaleY = availableHeight / textHeight;
+      const scaleX = availableWidth / estimatedTextWidth;
+      const scaleY = availableHeight / estimatedTextHeight;
       
       // Apply the transform to stretch the text dramatically
       h1.style.transform = `scale(${scaleX}, ${scaleY})`;
       
       console.log(`Text stretched: scaleX=${scaleX.toFixed(2)}, scaleY=${scaleY.toFixed(2)}`);
-      console.log(`Container: ${availableWidth}x${availableHeight}, Text: ${textWidth.toFixed(1)}x${textHeight.toFixed(1)}`);
+      console.log(`Target: ${availableWidth}x${availableHeight}, Estimated: ${estimatedTextWidth.toFixed(1)}x${estimatedTextHeight.toFixed(1)}`);
+      console.log(`Text content: "${textContent}", Lines: ${lines.length}, Longest: "${longestLine}" (${longestLine.length} chars)`);
+      
+      isScaling = false;
     }
     
     // Load fonts with timeout for iOS Lockdown mode
+    let fontLoadComplete = false;
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
         detectFontSupport();
-        // Stretch text after fonts are loaded
-        setTimeout(stretchTextToFit, 100);
+        if (!fontLoadComplete) {
+          fontLoadComplete = true;
+          setTimeout(stretchTextToFit, 100);
+        }
       }).catch(() => {
         // Fallback if font loading fails
         console.log('Font loading failed, using system fonts');
         document.body.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif';
-        setTimeout(stretchTextToFit, 100);
+        if (!fontLoadComplete) {
+          fontLoadComplete = true;
+          setTimeout(stretchTextToFit, 100);
+        }
       });
       
       // Timeout fallback for slow/blocked font loading
       setTimeout(() => {
-        detectFontSupport();
-        stretchTextToFit();
+        if (!fontLoadComplete) {
+          detectFontSupport();
+          fontLoadComplete = true;
+          stretchTextToFit();
+        }
       }, 3000);
     } else {
       // Fallback for browsers without font loading API
+      fontLoadComplete = true;
       setTimeout(stretchTextToFit, 1000);
     }
 
-    // Also ensure the function runs on DOM content loaded
+    // Ensure the function runs on DOM content loaded (only if fonts haven't loaded yet)
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(stretchTextToFit, 500);
+      if (!fontLoadComplete) {
+        fontLoadComplete = true;
+        setTimeout(stretchTextToFit, 500);
+      }
     });
     
     // Handle window resize to re-stretch text
@@ -371,7 +617,7 @@
       // Show custom install button or message
       const installHint = document.createElement('p');
       installHint.innerHTML = '💡 Tip: You can install this app on your device! <span style="text-decoration: underline;">Tap here</span>';
-      installHint.style.cssText = 'font-size: 0.9em; color: #ffb300; margin-top: 1em; cursor: pointer;';
+      installHint.className = 'install-hint';
       installHint.onclick = () => {
         if (deferredPrompt) {
           deferredPrompt.prompt();
@@ -382,7 +628,11 @@
           });
         }
       };
-      document.querySelector('.container').appendChild(installHint);
+      // Add to the designated container within the info card
+      const installContainer = document.getElementById('install-container');
+      if (installContainer) {
+        installContainer.appendChild(installHint);
+      }
     });
 
     // Handle successful PWA installation
